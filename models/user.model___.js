@@ -8,21 +8,21 @@ class User {
     static getAll(callback) {
         selectData('users', null, (error, results) => {
             if (error) throw error;
-            callback(null, results);
+            callback(results);
         });
     }
     static findByEmail(email, callback) {
         const condition = { email: email };
         selectData('users', condition, (error, results) => {
             if (error) throw error;
-            callback(null, results[0]);
+            callback(results[0]);
         });
     }
     static findById(user_id, callback) {
         const condition = { user_id: user_id };
         selectData('users', condition, (error, results) => {
             if (error) throw error;
-            callback(null, results[0]);
+            callback(results[0]);
         });
     }
     static create(user, callback) {
@@ -45,22 +45,19 @@ class User {
             }
         });
     }
-    
     static updatePassword(user, callback) {
-        const updateValues = { password: user.password};
+        const updateValues = { password: user.password };
         const updateCondition = { user_id: user.user_id };
-        // return;
         updateData('users', updateValues, updateCondition, (error, results) => {
             if (error) throw error;
-            callback(null, results);
+            callback(results);
         });
     }
-
     static deleteUser(user, callback) {
         const deleteCondition = { user_id: user.user_id };
         deleteData('users', deleteCondition, (error, results) => {
             if (error) throw error;
-            callback(null, results);
+            callback(results);
         });
     }
 

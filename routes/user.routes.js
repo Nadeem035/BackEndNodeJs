@@ -10,6 +10,7 @@ router.post('/register', UserController.registerUser);
 router.post('/login', UserController.loginUser);
 
 // Protected routes
+router.post('/changepassword', AuthMiddleware.authenticateToken, UserController.changePassword);
 router.get('/', AuthMiddleware.authenticateToken, UserController.getAllUsers);
 
 module.exports = router;
