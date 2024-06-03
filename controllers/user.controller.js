@@ -1,6 +1,15 @@
 // controllers/user.controller.js
+const fs = require('fs');
+const md5 = require('md5');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
+
+
+exports.getAllUsers = (req, res) => {
+  User.getAll(users => {
+    res.json(users);
+  });
+};
 
 exports.registerUser = (req, res) => {
   const newUser = {
@@ -38,19 +47,15 @@ exports.loginUser = (req, res) => {
     if (!user) {
       return res.json({status: false, message: 'User not found' });
     }
+    // Remove Password from User Object 
+    delete user.password;
+
 
     const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-
     return res.status(200).json({status: true, message: 'Login successful', user, token });
   });
 };
 
-exports.getAllUsers = (req, res) => {
-  User.getAll(users => {
-    res.json(users);
-  });
-};
-const md5 = require('md5');
 // Controller function to change password
 exports.changePassword = (req, res) => {
 
@@ -77,6 +82,74 @@ exports.changePassword = (req, res) => {
       }
       return res.status(200).json({status: true, message: 'Password updated successfully',});
     });
+  });
+};
+
+// Controller function to change password
+exports.profile = (req, res) => {
+  const {
+    name,
+    jobTitle,
+    age,
+    education,
+    experience,
+    language,
+    about,
+    email,
+    phone,
+    tempAddress,
+    address,
+    address2,
+    country,
+    stateCity,
+    zipCode,
+    latitude,
+    longitude,
+    facebook,
+    twitter,
+    instagram,
+    linkedin,
+    googlePlus
+  } = req.body;
+
+  const profileImage = req.file ? req.file.path : null;
+
+  console.log(req.body.formData.name);
+
+  // Here you can save the data to your database
+  // For demonstration purposes, we will save it to a JSON file
+
+  const userProfile = {
+    name,
+    jobTitle,
+    age,
+    education,
+    experience,
+    language,
+    about,
+    email,
+    phone,
+    tempAddress,
+    address,
+    address2,
+    country,
+    stateCity,
+    zipCode,
+    latitude,
+    longitude,
+    facebook,
+    twitter,
+    instagram,
+    linkedin,
+    googlePlus,
+    profileImage
+  };
+
+  fs.writeFile('userProfile.json', JSON.stringify(userProfile, null, 2), (err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Failed to save profile data', error: err });
+    }
+    res.status(200).json({ message: 'Profile updated successfully', data: userProfile });
   });
 };
 

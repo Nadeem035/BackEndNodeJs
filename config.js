@@ -5,7 +5,7 @@ const conn = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'testNodeJs'
+  database: 'bidding'
 });
 
 function executeQuery(sql, values, callback) {
